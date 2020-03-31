@@ -1,12 +1,24 @@
 
+import java.awt.Image;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author ptrack
@@ -16,6 +28,8 @@ public class signUpForm extends javax.swing.JFrame {
     /**
      * Creates new form signUpForm
      */
+    String imagePth = null;
+
     public signUpForm() {
         initComponents();
     }
@@ -125,13 +139,13 @@ public class signUpForm extends javax.swing.JFrame {
             }
         });
         jPanel3.add(jTextFieldFName);
-        jTextFieldFName.setBounds(120, 20, 120, 26);
+        jTextFieldFName.setBounds(120, 20, 120, 27);
 
         jPasswordField2.setBackground(new java.awt.Color(204, 204, 204));
         jPasswordField2.setForeground(new java.awt.Color(255, 153, 51));
         jPasswordField2.setText("jPasswordField1");
         jPanel3.add(jPasswordField2);
-        jPasswordField2.setBounds(120, 200, 130, 26);
+        jPasswordField2.setBounds(120, 200, 115, 27);
 
         jButtonCancel.setBackground(new java.awt.Color(255, 0, 51));
         jButtonCancel.setText("Cancel");
@@ -161,7 +175,7 @@ public class signUpForm extends javax.swing.JFrame {
             }
         });
         jPanel3.add(jLabelCreateAccount);
-        jLabelCreateAccount.setBounds(120, 440, 300, 16);
+        jLabelCreateAccount.setBounds(120, 440, 300, 17);
 
         jTextFieldLName.setBackground(new java.awt.Color(204, 204, 204));
         jTextFieldLName.setForeground(new java.awt.Color(255, 153, 51));
@@ -171,7 +185,7 @@ public class signUpForm extends javax.swing.JFrame {
             }
         });
         jPanel3.add(jTextFieldLName);
-        jTextFieldLName.setBounds(120, 70, 120, 26);
+        jTextFieldLName.setBounds(120, 70, 120, 27);
 
         jLabel5.setForeground(new java.awt.Color(204, 204, 204));
         jLabel5.setText("LASTNAME: ");
@@ -186,7 +200,7 @@ public class signUpForm extends javax.swing.JFrame {
             }
         });
         jPanel3.add(jTextFieldUsername);
-        jTextFieldUsername.setBounds(120, 120, 120, 26);
+        jTextFieldUsername.setBounds(120, 120, 120, 27);
 
         jLabel6.setForeground(new java.awt.Color(204, 204, 204));
         jLabel6.setText("USERNAME: ");
@@ -202,7 +216,7 @@ public class signUpForm extends javax.swing.JFrame {
             }
         });
         jPanel3.add(jPasswordField1);
-        jPasswordField1.setBounds(120, 160, 130, 26);
+        jPasswordField1.setBounds(120, 160, 115, 27);
 
         jLabel7.setForeground(new java.awt.Color(204, 204, 204));
         jLabel7.setText("PASSWORD:");
@@ -221,6 +235,11 @@ public class signUpForm extends javax.swing.JFrame {
         jLabelPic.setBounds(110, 240, 200, 120);
 
         jButtonBrowseImage.setText("Browse");
+        jButtonBrowseImage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonBrowseImageActionPerformed(evt);
+            }
+        });
         jPanel3.add(jButtonBrowseImage);
         jButtonBrowseImage.setBounds(347, 239, 120, 40);
 
@@ -268,17 +287,64 @@ public class signUpForm extends javax.swing.JFrame {
     private void jTextFieldFNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldFNameActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldFNameActionPerformed
+    public boolean verifData() {
 
+        if (jTextFieldFName.getText().equals("") && jTextFieldLName.getText().equals("") || jTextFieldUsername.getText().equals("")
+                || String.valueOf(jPasswordField1.getPassword()).equals("")) 
+        {   JOptionPane.showMessageDialog(null, "One or More Fileds are Empty");
+            return false;
+
+        } else if (!String.valueOf(jPasswordField1.getPassword()).equals(String.valueOf(jPasswordField2.getPassword()))) {
+           JOptionPane.showMessageDialog(null, "Incorrect Password");
+            return false;
+        } else if (imagePth == null) {
+            JOptionPane.showMessageDialog(null, "No Image Selected");
+            return false;
+        } else {
+
+            return true;
+        }
+    }
     private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
         // TODO add your handling code here:
+        System.exit(0);
     }//GEN-LAST:event_jButtonCancelActionPerformed
 
     private void jButtonCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateActionPerformed
         // TODO add your handling code here:
+        if(verifData()){
+        
+             Connection con = myConnection.getConnection();
+        PreparedStatement ps;
+
+        try {
+
+            ps = con.prepareStatement("INSERT INTO `user`(`fname`,`lname`,`username`,`pass`,`pic`)VALUES (?,?,?,?,?);");
+            ps.setString(1, jTextFieldFName.getText());
+            ps.setString(2, jTextFieldLName.getText());
+            ps.setString(3, jTextFieldUsername.getText());
+            ps.setString(4, String.valueOf(jPasswordField1.getPassword()));
+
+            InputStream img = new FileInputStream(new File(imagePth));
+            ps.setBlob(5, img);
+
+            if (ps.executeUpdate() != 0) {
+                JOptionPane.showMessageDialog(null, "Account Created");
+            } else {
+                JOptionPane.showMessageDialog(null, "Somethng wrong");
+            }
+
+        } catch (Exception ex) {
+            Logger.getLogger(signUpForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        }
+        
+       
     }//GEN-LAST:event_jButtonCreateActionPerformed
 
     private void jLabelCreateAccountMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelCreateAccountMouseClicked
-        loginForm logf=new loginForm();
+        loginForm logf = new loginForm();
         logf.setVisible(true);
         logf.pack();
         logf.setLocationRelativeTo(null);
@@ -297,6 +363,40 @@ public class signUpForm extends javax.swing.JFrame {
     private void jPasswordField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jPasswordField1ActionPerformed
+    public ImageIcon resizePic(String picPath) {
+
+        ImageIcon myImg = new ImageIcon(picPath);
+        Image img = myImg.getImage().getScaledInstance(jLabelPic.getWidth(), jLabelPic.getHeight(), Image.SCALE_SMOOTH);
+        ImageIcon myPicture = new ImageIcon(img);
+
+        return myPicture;
+
+    }
+    private void jButtonBrowseImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBrowseImageActionPerformed
+        // TODO add your handling code here:
+        JFileChooser filec = new JFileChooser();
+        filec.setCurrentDirectory(new File(System.getProperty("user.home")));
+        //file extension
+        FileNameExtensionFilter fileFilter = new FileNameExtensionFilter("*.Images", "jpg", "png", "gif");
+        filec.addChoosableFileFilter(fileFilter);
+        int fileState = filec.showSaveDialog(null);
+
+        //if the user select a file
+        if (fileState == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = filec.getSelectedFile();
+            String path = selectedFile.getAbsolutePath();
+            imagePth = path;
+
+            //display image in  the jlabel using resize image
+            jLabelPic.setIcon(resizePic(path));
+            //  jLabelPic.setIcon(new ImageIcon(path));
+
+    }//GEN-LAST:event_jButtonBrowseImageActionPerformed
+    //if the user cancel
+        else if (fileState == JFileChooser.CANCEL_OPTION) {
+            System.out.println("No image Selected");
+        }
+    }
 
     /**
      * @param args the command line arguments

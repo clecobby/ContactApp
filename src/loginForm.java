@@ -121,7 +121,7 @@ public class loginForm extends javax.swing.JFrame {
             }
         });
         jPanel2.add(jTextFieldUsername);
-        jTextFieldUsername.setBounds(120, 200, 120, 26);
+        jTextFieldUsername.setBounds(120, 200, 120, 28);
 
         jPasswordField1.setBackground(new java.awt.Color(204, 204, 204));
         jPasswordField1.setForeground(new java.awt.Color(255, 153, 51));
@@ -132,7 +132,7 @@ public class loginForm extends javax.swing.JFrame {
             }
         });
         jPanel2.add(jPasswordField1);
-        jPasswordField1.setBounds(120, 250, 130, 26);
+        jPasswordField1.setBounds(120, 250, 116, 28);
 
         jCheckBoxShowPass.setBackground(new java.awt.Color(255, 255, 255));
         jCheckBoxShowPass.setForeground(new java.awt.Color(255, 255, 255));
@@ -173,7 +173,7 @@ public class loginForm extends javax.swing.JFrame {
             }
         });
         jPanel2.add(jLabelCreateAccount);
-        jLabelCreateAccount.setBounds(120, 380, 240, 16);
+        jLabelCreateAccount.setBounds(120, 380, 240, 18);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -189,7 +189,7 @@ public class loginForm extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 489, Short.MAX_VALUE))
         );
 
         pack();
